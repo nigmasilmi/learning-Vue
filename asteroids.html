@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Learning Vue JS Course - Project</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <!-- development version, includes helpful console warnings -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Axios cdn -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+            .highlight{
+                border: 3px solid red;
+                color: red;
+            }
+
+            .resumen{
+                cursor: pointer;
+            }
+
+            .shooting-star-leave-to, .shooting-star-enter{
+                transform: translateX(150px) rotate(50deg);
+                opacity: 0;
+            }
+
+            .shooting-star-enter-active, .shooting-star-leave-active{
+                transition: all 0.5s ease;
+
+            }
+
+            .neo-list-leave-to, .neo-list-enter{
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            .neo-list-enter-active, .neo-list-leave-active{
+                transition: all 1s linear
+            }
+            .spin-enter-active{
+                animation: spin-steps 2s;
+            }
+            @keyframes spin-steps{
+                0%{
+                    transform:scale(1) rotate(0);
+                }
+                50%{
+                    transform: scale(10) rotate(360deg);
+                }
+                100%{
+                    transform: scale(10) rotate(180deg);
+                }
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="container">
+                <div class="card mt-5">
+                    <h2 class="class-header">
+                        <transition name="spin" appear>
+                        <span style="display: inline-block;">Asteroides</span>
+                        </transition>
+                        cercanos a la Tierra</h2>
+                    <transition name="shooting-star">
+                    <div class="m-3" v-cloak v-if="numAsteroids > 0 && mostrarResumen">
+                        <p>Mostrando {{numAsteroids}} asteroides</p>
+                        <p> {{closestObject}} es el que más cerca ha estado</p>
+                    </div>
+                    </transition>
+                    
+                    <div class="m-3 resumen">
+                        <a href="#" @click="toggleResumen">Mostrar resumen</a>
+                    </div>
+                    <table class="table table-striped" :class="['table-dark', 'table-bordered']">
+                        <thead class="thead-dark">
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Fecha de acercamiento</th>
+                            <th>Distancia salvada</th>
+                            <th>eliminar</th>
+                        </thead>
+                            <tbody is="transition-group" name="neo-list" v-cloak>
+                            <tr v-for="(a, index) in asteroidsArr" :key="a.neo_reference_id" :class="tieneData(a)">
+                                <td>{{index + 1}}</td>
+                                <td>{{a.name}}</td>
+                                <td>{{closeApproachFisher(a)}}</td>
+                                <td>
+                                    <ul v-if="a.close_approach_data.length > 0">
+                                        <li v-for="(value, key) in a.close_approach_data[0].miss_distance">{{key}}:
+                                            {{value}}</li>
+                                    </ul>
+                                </td>
+                                <td><button class="btn btn-warning" @click="removeItem(index)">eliminar</button></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Functionality Scripts -->
+        <script>
+            const apiKey = 'DPw6yT7w4v8pRDbvvKVb516XJbhUDPTAEmL9QqJV';
+            const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
+            const url2 = `https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=${apiKey}`;
+            let vm = new Vue({
+                el: '#app',
+                data: {
+
+                    asteroidsArr: [],
+                    mostrarResumen: true
+                },
+                computed: {
+                    numAsteroids: function () {
+                        return this.asteroidsArr.length;
+                    },
+                    closestObject: function () {
+                        var neosHavingData = this.asteroidsArr.filter(function (neo) {
+                            return neo.close_approach_data.length > 0;
+                          
+                        });
+                        var simpleNeos = neosHavingData.map(function (neo) {
+                            return {
+                                name: neo.name,
+                                miles: neo.close_approach_data[0].miss_distance.miles
+                            };
+                        });
+                        var sortedNeos = simpleNeos.sort(function (a, b) {
+                            return a.miles - b.miles;
+                        });
+                        return sortedNeos[0].name;
+                    }
+
+
+                },
+                created: function () {
+                    this.fetchAsteroids();
+                },
+                methods: {
+                    // fetch the data
+                    fetchAsteroids: function () {
+                        const apiKey = 'DPw6yT7w4v8pRDbvvKVb516XJbhUDPTAEmL9QqJV';
+                        const url2 = `https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=${apiKey}`;
+                        axios.get(url2).then(res => {
+                            console.log(res);
+                            vm.asteroidsArr = res.data.near_earth_objects.slice(10, 20);
+                            console.log(vm.asteroidsArr);
+                        });
+
+                    },
+
+                    estiloFilas: function(aster){
+                        if(aster.close_approach_data.length == 0){
+                            return {"border":"solid 3px red"}
+                        }
+                    },
+
+                      tieneData: function(aster){
+                        if(aster.close_approach_data.length == 0){
+                            return "highlight"
+                        }
+                    },
+
+                    toggleResumen: function(){
+                        this.mostrarResumen  = !this.mostrarResumen;
+                        return this.mostrarResumen;
+                    },
+
+                    // process the data for the close approach date
+
+                    closeApproachFisher: function (a) {
+                        if (a.close_approach_data.length > 0) {
+                            let spookyDate = a.close_approach_data[0].close_approach_date;
+                            return spookyDate;
+
+                        } else {
+                            return "N/A"
+                        }
+
+                    },
+                    removeItem: function(index){
+                        return this.asteroidsArr.splice(index, 1);
+                    }
+
+
+                }
+
+            });
+        </script>
+    </body>
+
+</html>

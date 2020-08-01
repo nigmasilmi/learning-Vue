@@ -1,0 +1,34 @@
+body {
+    font-family: 'Titillium Web',
+        sans-serif;
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Ubuntu',
+        sans-serif;
+}
+
+ul li {
+    list-style: none;
+}
+
+.addItemInputClass {
+    margin-left: 2%;
+    width: 21em;
+    height: 2em;
+}
+
+.strikeout {
+    text-decoration: line-through;
+    color: #333;
+}
+
+.priority {
+    color: #e43434;
+}

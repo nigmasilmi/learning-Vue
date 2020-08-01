@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Coffee that is right for you</title>
+        <!-- Bootstrap styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        <!-- Vue development version, includes helpful console warnings -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"> 
+        <!-- Project css -->
+        <link rel="stylesheet" href="coffeestyles.css">
+    </head>
+
+    <body>
+
+        <div id="app">
+            <div>
+                <plan-picker></plan-picker>
+            </div>
+        </div>
+
+        <!-- Plan-Picker x/template -->
+        <script type="x/template" id="plan-picker-template">
+            <div class="skeleton">
+                <div class="cup">
+                    <p class="appCatch">get your <br /> coffee now</p>
+                    <img class="semiHero" src="./assets/PikPng.com_coffee-mug-png_480317.png" alt="coffee cup">
+                </div>
+                <div class="colorFold cardHolder">
+                    <coffee-plan v-for="plan in plansArr" :name="plan.name" :imgsrc="plan.imgsrc" :key="plan.name" @select="selectPlan" :selectedPlan="selectedPlan"></coffee-plan>
+                </div>
+            </div>
+        </script>
+
+        <!-- Coffe-Plan x/template -->
+        <script type="x/template" id="coffee-plan-template">
+            <div class="container">
+                <div class="row">
+                        <div class="card bg-dark text-black" >
+                            <img class="card-img" :class="{'active-plan': isSelected}" :src="imgsrc" alt="Card image">
+                            <div class="card-img-overlay">
+                                <h5 class="card-title" @click="select">{{ name }}</h5>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </script>
+
+
+
+        <script src="coffeeApp.js"></script>
+    </body>
+
+</html>

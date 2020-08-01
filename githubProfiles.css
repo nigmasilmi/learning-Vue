@@ -1,0 +1,26 @@
+body {
+    font-family: 'Titillium Web',
+        sans-serif;
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Ubuntu',
+        sans-serif;
+}
+
+a,
+a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+.avatarCredits {
+    font-size: 12px;
+    text-align: center;
+}

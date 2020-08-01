@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List - Vue School</title>
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- Vue development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="shopping.css">
+</head>
+<body>
+<div id="shopping-list">
+    <div class="header">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ header.toLocaleUpperCase() }}</h1>
+            </div>
+            <div class="col-md-4 mt-3">
+                <button v-if="state == 'default'" class="btn-primary" @click="changeState('edit')">Crear lista</button>
+                <button v-else class="btn-danger" @click="changeState('default')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div v-if="state === 'edit'">
+    <form class="form" @submit.prevent>
+        <div class="form-group m-3">
+            <input class="form-control addItemInputClass m-3" type="text" v-model="newItem" placeholder="Añade un producto a tu lista" @keyup.enter="addItem">
+            <input class="btn btn-primary ml-4" type="submit" value="Añadir producto" @click.prevent.self="addItem" v-bind:disabled="newItem.length === 0">
+        </div>
+    </form>
+    <ul>
+        <li v-for="item in reversedItems" style="cursor: pointer;" @click="togglePurchased(item)" :class="{strikeout : item.purchased}">{{ item.label }}</li>
+    </ul>
+    <p v-if="items.length === 0">Haz tu lista de compras, comienza a agregar productos</p>
+    </div>
+</div>
+<script>
+    var shoppingList = new Vue({
+        el: '#shopping-list',
+        data: {
+            state: 'default',
+            header: 'Tu lista de compras',
+            newItem: '',
+            items: [
+                {
+                    label: 'Geles GU',
+                    purchased: false,
+                    highPriority : true
+                },
+                 {
+                    label: 'Cinturón de hidratación',
+                    purchased: false,
+                    highPriority : false
+                },
+                 {
+                    label: 'Pastillas de Sal',
+                    purchased: false,
+                    highPriority : true
+                },
+                 {
+                    label: 'Bloqueador solar',
+                    purchased: false,
+                    highPriority : true
+                },
+                  {
+                    label: 'Amazfit Bip',
+                    purchased: true,
+                    highPriority : true
+                },
+               
+            ]
+        },
+        computed:{
+            reversedItems(){
+                return this.items.slice(0).reverse();
+            }
+        },
+        methods:{
+            addItem(){
+                this.items.push({
+                    label : this.newItem,
+                    purchased : false
+                });
+                this.newItem = '';
+                
+            },
+            changeState(newState){
+                this.state = newState;
+                this.newItem = '';
+            },
+            togglePurchased(item){
+                item.purchased = !item.purchased;
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

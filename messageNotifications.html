@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+
+        <title>Messages Notification Center</title>
+    </head>
+
+    <body>
+
+
+        <div id="app" class="ui container">
+            <h1>Notification Center</h1>
+
+            <notification-messages>
+                <p>
+                    Good day
+                </p>
+            </notification-messages>
+
+            <notification-messages header="Oops!" type="error">
+                We'll try to fix it
+            </notification-messages>
+            <notification-messages header="Congratulations!" type="success">
+                Something good just happened
+            </notification-messages>
+
+
+        </div>
+
+        <!-- Template for Notification Message -->
+        <script type="text/x-template" id="notification-messages-template">
+            <div class="ui message" :class="type" v-if="!hidden">
+                <i class="close icon" @click="hideMessage"></i>
+                <div class="header">
+                    {{ header }}
+                </div>
+                <slot></slot>
+            </div>
+        </script>
+
+        <!-- Import Vue.js -->
+        <script src="https://unpkg.com/vue"></script>
+
+        <script>
+            Vue.component('notification-messages', {
+                template: '#notification-messages-template',
+                props: {
+                    type: {
+                        type: String,
+                        default: 'info'
+                    },
+                    header: {
+                        type: String,
+                        default: 'Have a good day'
+                    }
+                },
+                data() {
+                    return {
+                        hidden: false
+                    }
+                },
+                methods: {
+                    hideMessage() {
+                        this.hidden = true
+                    }
+                }
+            });
+            new Vue({
+                el: '#app'
+            })
+        </script>
+    </body>
+
+</html>
