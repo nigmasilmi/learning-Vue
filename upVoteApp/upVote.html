@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bulma -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/ec65887d78.js" crossorigin="anonymous"></script>
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Own classes -->
+        <link rel="stylesheet" href="./css/upoVote.css">
+        <title>Upvote App</title>
+    </head>
+
+    <body>
+        <div id="app">
+            <h2 class="title has-text-centered dividing-header">UpVote - add yours</h2>
+            <div class="section">
+                <article class="media" v-for="sub in sortedSubmissions" :key="sub.id" :class="{'green-border':sub.votes >=20}">
+                    <figure class="media-left image is-64x64">
+                        <img :src="sub.submissionImage" alt="">
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>
+                                    <a href="#" class="has-text-info">{{sub.title}}</a>
+                                    <span class="tag is-small">#4</span>
+                                </strong>
+                                <br>
+                               {{sub.description}}
+                                <br>
+                                <small>
+                                    Submitted by:
+                                    <img class="image is-24x24" :src="sub.avatar" alt="">
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="media-right mediaRightCorr">
+                        <span class="icon is-small" @click="upVote(sub.id)">
+                            <i class="fa fa-chevron-up"></i>
+                            <strong class="has-text-info">{{sub.votes}}</strong>
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+
+
+        <!-- Import Vue.js -->
+        <script src="https://unpkg.com/vue"></script>
+
+
+        <!-- App JS Code -->
+        <script type="module" src="./seed.js"></script>
+
+        <script src="./main.js"></script>
+
+    </body>
+
+</html>
